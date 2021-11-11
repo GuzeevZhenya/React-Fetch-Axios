@@ -5,14 +5,14 @@ const instance = axios.create({
 });
 
 export const userAPI = {
-  getUser() {
+  getUserInfo() {
     return instance.get().then((response) => response.data);
   },
 };
 
 
-export const pokemonAPI = {
-  getPokemon(id) {
+export const pokemonAPI  = {
+  getPokemonInfo(id) {
     return axios
       .get(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then((response) => response.data);

@@ -5,7 +5,8 @@ import "./App.css";
 
 const App = () => {
   const [peoples, setPeoples] = useState([]);
-  const [pokemonPhoto,setPokemonPhoto] = useState('')
+  const [pokemons, setPokemons] = useState([]);
+  const [pokemonIndex, setPokemonIndex] = useState("");
 
   useEffect(() => {
     try {
@@ -17,7 +18,7 @@ const App = () => {
   }, []);
 
   const getUser = () => {
-    userAPI.getUser().then((result) => {
+    userAPI.getUserInfo().then((result) => {
       const data = result.results[0];
       setPeoples([
         ...peoples,
@@ -30,29 +31,52 @@ const App = () => {
       ]);
     });
   };
-const getPokemon = ()=>{
-  pokemonAPI.getPokemon(13)
-  .then(responese=>setPokemonPhoto(responese.sprites.back_default))
-}
+  const getPokemon = () => {
+    pokemonAPI.getPokemonInfo(pokemonIndex).then((responese) =>
+      setPokemons([
+        {
+          name: responese.name,
+          photo: responese.sprites.back_default,
+        },
+      ])
+    );
+  };
   const personInfo = peoples.map(({ name, phone, email, photo }, index) => {
     return (
-      <div key={index}>
-        <div>{name}</div>
-        <div>{phone}</div>
-        <div>{email}</div>
-        <div>
-          <img src={photo} alt="photo" />
+      <div className="about-person" key={index}>
+        <div className="person-photo">
+          {/* <img src={photo} alt="photo" /> */}
+        </div>
+        <div className="person-info">
+          <div><h5>Name:</h5>{name}</div>
+          <div><h5>Phone:</h5>{phone}</div>
+          <div><h5>Email:</h5>{email}</div>
         </div>
       </div>
     );
   });
-  
+
+  const pokemonInfo = pokemons.map(({ name, photo }, index) => {
+    return (
+      <div key={index}>
+        <div>{name}</div>
+        <div>
+          <img src={photo} />
+        </div>
+      </div>
+    );
+  });
+
   return (
     <div className="App">
-      <button onClick={() => getUser()}>Click</button>
-      <button onClick={() => getPokemon()}>Pokemon</button>
+      <div>
+        <input onChange={(e) => setPokemonIndex(e.target.value)} />
+        <button onClick={() => getPokemon()}>Pokemon</button>
+      </div>
+      <button onClick={() => getUser()}>Random User</button>
+
       {personInfo}
-      <div><img src={pokemonPhoto} /></div>
+      <div>{pokemonInfo}</div>
     </div>
   );
 };
